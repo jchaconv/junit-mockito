@@ -1,0 +1,113 @@
+*************************
+SECCIÓN 1 : Introducción
+*************************
+
+Temas de JUnit5:
+
+- Pruebas unitarias o Desarrollo guiado por pruebas TDD
+- Assertions(diferentes tipos de afirmaciones)
+- assertThrows(manejo de errores)
+- assertAll(ejecutar grupo de asserts)
+- Anotaciones @DisplayName y @Disabled
+- Ciclo de vida @AfterEach, @BeforeEach, @AfterAll y @BeforeAll
+- Test condicionales con @EnabledOnOs, @EnabledOnJre, etc.
+- Assumptions
+- Test anidades @Nested
+- @RepeatedTest
+- @ParametrizedTest
+- @Tag para categorizar o etiquetar los test
+
+Temas de Mockito:
+
+- Dependencias mock
+- verify
+- Anotaciones @Mock, @InjectMock y @Captor
+- @ExtendWith
+- Excepciones thenThrow
+- Argument matchers
+- Argument capture
+- Familia de métodos do..
+- Spy
+
+*******************************
+
+4. Introducción pruebas unitarias
+
+Si queremos depurar errores en la lógica necesitamos automatización en los test
+para probar distintos casos de uso.
+
+*******************************
+
+5. Introducción JUnit 5
+
+Está conformado por:
+
+JUnit Platform: Core, librería principal, framework de ejecución
+JUnit Jupiter: Como devs interactuamos con jupiter para escribir las pruebas
+JUnit Vintage: Para integrar v4 y v5 en un proyecto
+
+Anotaciones Junit Jupiter:
+@Test
+@DisplayName
+@Nested
+@Tag
+@ExtendWith
+@BeforeEach
+@AfterEach
+@BeforeAll
+@AfterAll
+@Disabled
+
+*******************************
+
+
+
+
+
+*******************************
+
+
+*******************************
+
+
+*******************************
+
+
+*******************************
+
+
+*******************************
+
+
+*******************************
+
+
+*******************************
+
+
+*******************************
+
+
+*******************************
+
+
+*******************************
+
+
+*******************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
