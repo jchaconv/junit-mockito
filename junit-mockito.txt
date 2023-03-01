@@ -29,7 +29,9 @@ Temas de Mockito:
 - Familia de métodos do..
 - Spy
 
-*******************************
+********************
+SECCIÓN 2 : JUnit 5
+********************
 
 4. Introducción pruebas unitarias
 
@@ -60,6 +62,342 @@ Anotaciones Junit Jupiter:
 
 *******************************
 
+7. Creando y configurando el proyecto con JUnit 5
+
+Se creó un proyecto maven simple y se añadió la dependencia de junit-jupiter
+Dar click derecho en el pom -> add dependency
+
+BigDecimal es más preciso para operaciones con dinero
+
+*******************************
+
+8. Escribiendo y ejecutando primeras pruebas unitarias con Assertions
+
+Ctrl+shift+f10 para correr el test
+
+AccountTest accountNameTest
+
+assertEquals y assertTrue para validar el nombre
+
+*******************************
+
+9. Escribiendo test para el saldo
+
+AccountTest balanceAccountTest
+
+Se hizo el test para probar el balance
+
+assertFalse y assertTrue
+compareTo() retorna -1(cuando es menor), 0(cuando es igual) y 1(cuando es mayor)
+y esos valores se comparan con BigDecimal.ZERO
+
+*******************************
+
+10. Test driven development TDD con JUnit
+
+AccountTest accountReferenceTest
+
+Si hacemos un assertNotEquals el test pasa porque las instancias no son iguales.
+
+Se cambió la validación a assertEquals y se modificó el método equals de la clase Account
+para comparar también por valor.
+
+*******************************
+
+11. TDD para debito y crédito
+
+Para ambos métodos tener en cuenta que BigDecimal es inmutable
+y se crearon los métodos en la clase Account
+
+AccountTest debitAccountTest y creditAccountTest
+assertNotNull y assertEquals
+
+*******************************
+
+12. Probando y afirmando excepciones con assertThrows en JUnit 5
+
+Se crea el test porque no se debe debitar si no tiene saldo
+
+Se crea la clase Exception y se modifica el método debit de Account
+
+assertThrows acepta dos parámetros:
+-Throwable(Nuestra clase exception o cualquiera que se pueda disparar)
+-Executable(función lambda): Aquí se invoca al método que lanzaría la excepción
+
+*******************************
+
+13. Añadiendo la clase Banco y la realcion con las cuentas
+
+AccountTest transferMoneyFromAccount
+
+Se realiza validacion con el saldo de las cuentas luego de realizar una transferencia
+
+*******************************
+
+14. Probando y afirmando las realciones entre Banco y Cuenta
+
+
+AccountTest relationBankAccountsTest
+
+Se usó assertEquals y assertTrue para las validaciones
+lo más interesante fue comprobar si había alguna cuenta que le pertenecía al usuarios
+con el nombre indicado
+
+*******************************
+
+15. Usando el método assertAll
+
+AccountTest assertAllTest
+
+Se usa assertAll para agrupar todos los test en funciones lambda y si falla más de uno 
+muestra el detalle de los errores, esto no sucede sin este método.
+
+*******************************
+
+16. Agregando mensajes de falla en los métodos assertions
+
+En AccountTest accountNameTest se modificó la sgte línea agregándole un mensaje de error:
+
+assertEquals(expectedName, currentName, "El nombre debería ser Julio");
+
+No es conveniente trabajarlo así porque así no se use se sigue generando una instancia para ese String y se 
+utiliza memoria. Debido a que pueden ser muchos mensajes personalizados, esto no es conveniente.
+
+Lo mejor es crearlo con una lambda para que solo se cree la instancia en caso salga error:
+assertEquals(expectedName, currentName, () -> "El nombre debería ser Julio");
+
+*******************************
+
+17. Usando anotaciones @DisplayName y @Disabled
+
+AccountTest accountNameTest()
+
+@DisplayName sirve para ponerle un nombre descriptivo al test y que aparezca en la consola de junit
+
+AccountTest assertAllTest()
+
+Se agregó fail() para forzar error.
+
+@Disabled para ignorar un test en caso no se termine la implementación o no se pueda resolver un error.
+Es más útil que simplemente quitar @Test porque así aparece en el reporte.
+
+*******************************
+
+18. Ciclo de vida anotaciones @AfterEach y @BeforeEach
+
+Se crea una instancia y se termina cuando finaliza la prueba.
+
+Se ejecutan en ese orden:
+
+@BeforeAll
+    @BeforeEach
+    @AfterEach
+@AfterAll
+
+Se crea una clase LifecycleTest, es una copia de AccountTest
+pero se agregaron los métodos setUp y tearDown con el autocompletado
+También se borraron las declaraciones duplicadas de Account
+
+
+*******************************
+
+19. Ciclo de vida anotaciones @AfterAll y @BeforeAll
+
+LifecycleTest
+Se crearon beforeAll y afterAll con autocompletado
+En beforeAll se pueden declarar conexiones a base de datos
+
+Se agregó @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+para que se cree una instancia y luego se ejecute el ciclo de vida pero no es buena práctica
+de esta manera se le puede quitar el static a beforeAll y afterAll y ya no saldría error.
+
+No es buena práctica porque al tener una sola instancia porque se acoplan los métodos y estamos
+interfiriendo en el comportamiento de otros test. Todo debe ser stateless para evitar este conflicto
+
+*******************************
+
+20. Test condicionales @EnabledOnOs, @EnabledOnJre, @EnabledIfSystemProperty etc.
+
+Para ejecutar test dependiendo de ciertas características como so, jre, etc
+
+LifecycleTest
+onlyWindowsTest, notWindowsTest, onlyLinuxMacTest, onlyJdk11, onlyJdk8
+
+
+LifecycleTest printSystemProperties
+Para probar @EnabledIfSystemProperty y @DisabledIfSystemProperty
+
+
+Lo más interesante fue testDevEnv()
+por buscar una propiedad que no existe:
+@EnabledIfSystemProperty(named = "ENV", matches = "dev")
+Retorna: System property [ENV] does not exist
+
+Para solucionar ir a Edit Configurations -> -DENV=dev luego del -ea
+la "-D" significa que se va a setear un system property
+
+
+asegurar que no se duplique la config y ejecutar desde arriba en el icono de play. Salió bien.
+
+*******************************
+
+21. Ejecuciones de test condicionales con @EnabledIfEnvironmentVariable
+
+LifecycleTest:
+printEnvironmentVariables
+javaHomeTest
+
+@EnabledIfEnvironmentVariable(named = "JAVA_HOME", matches = ".*jdk-11.0.17.*")
+
+Se agregó una variable de entorno:
+
+devEnvEnvironmentVariableTest
+prodEnvEnvironmentVariableTest -> @DisabledIfEnvironmentVariable
+
+*******************************
+
+22. Ejecución de test condicional con Assumptions programáticamente
+
+LifecycleTest balanceAccountTestDev y balanceAccountTestDev2
+
+Assumptions: Para ejecutar un test según una condición por ejemplo cuando es de env = dev
+
+assumeTrue  : Si no se cumple la condición no se ejecuta el test
+assumingThat: Es más flexible porque se puede ejecutar lo que está fuera
+              Cabe mencionar que si falla alguna validación dentro se corta todo el test.
+
+*******************************
+
+23. Clases de test anidadas usando @Nested
+
+Para organizar en un orden jerárquico mediante clases anidadas
+
+Se crearon varias clases anidadas y se puso @Nested
+El reporte de test aparece más ordenado y fácil de seguir
+
+*******************************
+
+24. Repitiendo pruebas con @RepeatedTest
+
+Se usa cuando hay alguna variable con valores random
+
+Se modificó debitAccountTest. Se puede agregar solo el número de repeticiones
+pero si se quiere personalizar más:
+@RepeatedTest(value = 5, name = "{displayName} - repeticion {currentRepetition} de {totalRepetitions}")
+Y también se puede usar RepetitionInfo en parámetros de entrada del método y usar sus valores
+
+*******************************
+
+25. Escribiendo pruebas parametrizadas con @ParameterizedTest
+
+Se utiliza para que se ejecute el test por cada parámetro que se establezca
+Y están acompañados de una anotación Source
+
+LifecycleTest parameterizedValueSourceTest
+
+@ParameterizedTest(name = "numero {index} ejecutando con valor {0} - {argumentsWithNames}")
+@ValueSource(strings = {"100","200","300","500","700","1000"}) //puede ser doubles o ints también
+
+*******************************
+
+26. Pruebas parametrizadas con @ParameterizedTest parte 2
+
+LifecycleTest parameterizedCsvSourceTest
+@CsvSource({"1,100","2,200","3,300","4,500","5,700","6,1000"})
+y se agregó String index en los parámetros de entrada del método
+
+
+LifecycleTest parameterizedCsvFileSourceTest
+Se creó el archivo data.csv en la carpeta resources
+@CsvFileSource(resources = "/data.csv")
+No llega index
+
+
+LifecycleTest parameterizedMethodSourceTest
+@MethodSource("setAmountList")
+Tuve que sacar el método de la clase anidada porque el parameterizedMethodSourceTest
+no reconocía a setAmountList si este no estaba en la clases anidada, y si estaba dentro debía
+ser static y java11 no permite static methods en nested classes
+
+*******************************
+
+27. Pruebas parametrizadas con @ParameterizedTest parte 3
+
+También se pueden hacer comparaciones con 4 valores
+
+LifecycleTest parameterizedCsvSourceTest2
+LifecycleTest parameterizedCsvFileSourceTest2
+
+Se creó la clase Nested ParametrizedTest
+
+*******************************
+
+28. Tagging tests con anotación @Tag
+
+Para ejecutar pruebas que solo tengan cierto tag
+
+Se agregó @Tag("param") en:
+
+class ParametrizedTest
+void parameterizedMethodSourceTest
+debitAccountTest y creditAccountTest de class AccountOperations para solo taggear los métodos
+transferMoneyFromAccountTest se agregó @Tag("account") y @Tag("bank")
+
+Se debe ir a edit configurations -> tag: param
+
+
+*******************************
+
+29. Inyección de Dependencia & componentes testInfo y TestReporter
+
+Se usa TestInfo para obtener mayor información descriptiva del test.
+TestReporter para mostrar la info con un formato ligeramente distinto, como un log
+Se hicieron modificaciones:
+
+LifecycleTest setUp
+accountNameTest de la clase Nested AccountNameBalanceTest
+
+*******************************
+
+30. Timeout en JUnit 5
+
+Se crea la clase Nested ExampleTimeoutTest y sus respectivos métodos
+Se prueba con @Timeout
+
+*******************************
+
+31. Maven surefire plugin
+
+Para ver los test mediante consola. La necesidad es cuando ejecutamos en otro ambiente
+
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>2.22.2</version>
+    <configuration>
+        <groups>timeout</groups>
+    </configuration>
+</plugin>
+
+mvn -> test(click derecho) -> run junit5-app test
+
+El "groups" es para ejecutar por Tags. Los reportes están en surefire-reports de la carpeta target.
+
+Descargar el binary zip de maven y crear la variable de entorno(user): MAVEN_HOME -> D:\apache-maven-3.9.0
+y en el path(user) agregar -> %MAVEN_HOME%\bin
+
+En cmd:
+
+D:\cursos-udemy\junit-mockito\junit5-app>mvn --version
+Apache Maven 3.9.0 (9b58d2bad23a66be161c4664ef21ce219c2c8584)
+Maven home: D:\apache-maven-3.9.0
+Java version: 11.0.17, vendor: Oracle Corporation, runtime: C:\Program Files\Java\jdk-11.0.17
+Default locale: en_US, platform encoding: Cp1252
+OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
+
+Luego ejecutar: mvn test
+
+Aparece el reporte con el detalle, esto nos sirve para poder ejecutar en consola cuando tenemos que probar en otro ambiente que no sea local.
 
 
 
@@ -97,7 +435,7 @@ Anotaciones Junit Jupiter:
 *******************************
 
 
-
+*******************************
 
 
 
