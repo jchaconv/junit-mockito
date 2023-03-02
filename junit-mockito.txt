@@ -400,42 +400,193 @@ Luego ejecutar: mvn test
 Aparece el reporte con el detalle, esto nos sirve para poder ejecutar en consola cuando tenemos que probar en otro ambiente que no sea local.
 
 
+********************
+SECCIÓN 3 : Mockito
+********************
+
+framework de pruebas unitarias que sirve para crear objetos simulados(mock)
+BDD: Behaviour Driven Development
+Se trabaja con el BDD porque con Mockito estamos simulando el comportamiento que va a tener un api rest, obj de base de datos, etc.
+
+Se crea el proyecto mockito-app y se prueba únicamente con junit en ExamServiceImplTest findExamByName.
+
+*******************************
+
+37. Realizando primeras pruebas con mockito
+
+Al usar mock no se está usando el método real de la clase, sino que se usará la data simulada.
+
+ExamServiceImplTest findExamByNameWithMockito
+
+
+Para Optional es mejor usar orElseThrow en lugar de get según la recomendación del mismo Java
+Este ejercicio muestra que es mejor usar mockito para cambiar los distintos valores de retorno y así probar casuísticas,
+de esta manera no tenemos que modificar el service o el repository para retornar data diferente.
+
+ExamServiceImplTest findOptionalExamByNameWithMockito y findOptionalExamByNameEmptyListWithMockito
+
+
+*******************************
+
+38. Agregando nuevas dependencias mock
+
+Se quiere agregar otra dependencia con el repository, para eso se añadió el código:
+
+@BeforeEach setUp
+ExamServiceImpl findExamByNameWithQuestions 
+
+*******************************
+
+39. Probando nuevas dependencias mock
+
+Se creó examQuestionsTest donde se añaden dos repos y un nuevo método en el service
+también se usó anyLong()
+Básicamente si en el service se llama a los métodos del repository que están definidos en el when
+se realiza el mockeo de objetos
+
+*******************************
+
+40. Probando con verify
+
+Se agregó verify() para comprobar que se invocan ciertos métodos.
+
+ExamServiceImplTest examQuestionsVerifyTest y noExistsExamVerifyTest
+
+*******************************
+
+41. Inyección de dependencia y anotaciones @Mock, @InjectMocks y @ExtendWith
+
+Las implementaciones de los repositories y service en setUp() se comentaron
+Se agregaron anotaciones y la línea MockitoAnnotations.openMocks(this); sirve para habilitar
+el uso de anotaciones, se reemplazó por @ExtendWith(MockitoExtension.class en la clase principal
+
+@Mock para los repositories
+@InjectMock para el service donde se injectarán los mocks
+
+Tuve que poner ExamServiceImpl en lugar de ExamService para que funcione
+
+*******************************
+
+42. Realizando más pruebas del repositorio con el metodo guardar
+
+Se agregaron más implementaciones para hacer distintos verify
+
+saveExamTest
+
+*******************************
+
+43. Test del id incremental en el método guardar usando Invocation Argument
+
+Para modificar el id(null) e incrementarlo se usó una implementación con Answer
+
+ExamServiceImplTest saveExamIncrementalIdTest
+
+*******************************
+
+44. Comprobaciones de excepciones usando when y thenThrow
+
+Se usó el ArgumentMatcher isNull() y se validó el retorno de un Exception
+
+ExamServiceImplTest handleExceptionTest
+
+*******************************
+
+45. Argument matchers
+
+Los ArgumentMatchers sirven para validar la data que se pasó al mock.
+Se usó argThat() y eq()
+
+ExamServiceImplTest argumentMatchersTest
+
+
+*******************************
+
+46. Argument matchers parte 2
+
+Se creó una nueva implementación de ArgumentMatcher para enviar mensaje personalizado
+
+ExamServiceImplTest argumentMatchersTest2
+ExamServiceImplTest MyArgsMatchers
+
+*******************************
+
+47. Capturando argumentos de método con Argument capture
+
+ArgumentCapture sirve para obtener el valor que se usa en el mock
+
+ExamServiceImplTest testArgumentCaptor
+
+*******************************
+
+48. Usando doThrow para comprobar excepciones en métodos void
+
+Se usa doThrow mayormente para lanzar un exception en un método void
+
+ExamServiceImplTest doThrowTest
+
+*******************************
+
+49. Usando doAnswer
+
+ExamServiceImplTest doAnswerTest y saveExamIncrementalIdWithDoAnswerTest
+
+*******************************
+
+50. Usando doCallRealMethod para la llamada real a un método mock
+
+Se usa para invocar al método real. Se hizo implementaciones de los repositories.
+
+ExamServiceImplTest doCallRealMethodTest
+
+*******************************
+
+51. Implementando espías con Spy y doReturn
+
+Spy es como un híbrido. No abusar de esto porque no tenemos control de la respuesta de "terceros"
+
+Al usar when se llama tanto al método real del repository como al mock. Por eso usamos doReturn.
+Se validó usando soutm como log en las clases correspondientes.
+
+ExamServiceImplTest spyTest
+
+ExamServiceImplSpyTest para mostrar como se usa la anotación Spy
+
+*******************************
+
+52. Verificando el orden de las invocaciones de los mock
+
+inOrder se usa para validar el orden en que se ejecutan los mocks
+
+ExamServiceImplTest invocationOrderTest y invocationOrderTest2
+
+*******************************
+
+53. Verificando el número de invocaciones de los mock
+
+Se usan los siguientes métodos para validar el número de invocaciones
+que se hace a un servicio o mock.
+
+Para probar descomentar la línea de doble invocación en:
+ExamServiceImpl findExamByNameWithQuestions
+
+ExamServiceImplTest numberOfInvocationsTest
+
+times(2)
+atLeast(2)
+atLeastOnce()
+atMost(2)
+atMostOnce()
+
+never()
+verifyNoInteractions
+
+*******************************
+
 
 
 *******************************
 
 
-*******************************
-
-
-*******************************
-
-
-*******************************
-
-
-*******************************
-
-
-*******************************
-
-
-*******************************
-
-
-*******************************
-
-
-*******************************
-
-
-*******************************
-
-
-*******************************
-
-
-*******************************
 
 
 
