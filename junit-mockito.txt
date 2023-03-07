@@ -580,12 +580,87 @@ atMostOnce()
 never()
 verifyNoInteractions
 
+
+
+********************
+SECCIÓN 3 : Mockito
+********************
+
+Se crea el proyecto mockito-springboot con la dependencia Spring Web
+Para evitar conflictos se utilizó la versión 2.7.9 de spring boot porque
+con la tres sale error y se setea java17 por default.
+
+Se realizaron métodos estáticos para crear data en la clase Data ya que inteferían en los test.
+
+Se usó assertSame en contextLoads3 para comparar que dos objetos sean iguales.
+
+La forma de Mockito es con @Mock e @InjectMocks pero
+también se usaron las anotaciones @MockBean y @Autowired(Se tiene que usar @Service en el Impl)
+ambas se utilizan juntas en Spring Boot
+
+*******************************
+
+65. Deshabilitando la traza del logs de Spring en el contexto test
+
+Crear un properties en la carpeta test/resources y agregar:
+
+logging.level.org.springframework=OFF
+logging.level.root=OFF
+spring.main.banner-mode=OFF
+
+Y crear el logback-test.xml
+El codigo está en el ejemplo
+
+Todo esto ayuda a reducir mucho los logs en test.
+
+
+*********************************
+SECCIÓN 4 : Test de Repositorios
+*********************************
+
+Se agregaron las dependencias de jpa y h2 al proyecto mockito-springboot
+
+Se agregó en properties para ver logs de hibernate:
+
+logging.level.org.hibernate.SQL=debug
+
+
+<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
 *******************************
 
 
 
 *******************************
 
+
+
+*******************************
+
+
+
+*******************************
+
+
+
+*******************************
+
+
+
+*******************************
+
+
+
+*******************************
 
 
 
