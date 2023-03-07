@@ -21,36 +21,37 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findById(Long id) {
-        return accountRepository.findById(id);
+        //return accountRepository.findById(id);
+        return accountRepository.findById(id).orElseThrow();
     }
 
     @Override
     public int reviewTotalTransfers(Long idBank) {
-        Bank bank = bankRepository.findById(idBank);
+        Bank bank = bankRepository.findById(idBank).orElseThrow();
         return bank.getTotalTransfers();
     }
 
     @Override
     public BigDecimal reviewBalance(Long accountId) {
-        Account account = accountRepository.findById(accountId);
+        Account account = accountRepository.findById(accountId).orElseThrow();
         return account.getBalance();
     }
 
     @Override
     public void transfer(Long accountNumberOrigin, Long accountNumberDestination, BigDecimal amount, Long idBank) {
 
-        Account originAccount = accountRepository.findById(accountNumberOrigin);
+        Account originAccount = accountRepository.findById(accountNumberOrigin).orElseThrow();
         originAccount.debit(amount);
-        accountRepository.update(originAccount);
+        accountRepository.save(originAccount);
 
-        Account destinationAccount = accountRepository.findById(accountNumberDestination);
+        Account destinationAccount = accountRepository.findById(accountNumberDestination).orElseThrow();
         destinationAccount.credit(amount);
-        accountRepository.update(destinationAccount);
+        accountRepository.save(destinationAccount);
 
-        Bank bank = bankRepository.findById(idBank);
+        Bank bank = bankRepository.findById(idBank).orElseThrow();
         int totalTransfers = bank.getTotalTransfers();
         bank.setTotalTransfers(++totalTransfers);
-        bankRepository.update(bank);
-
+        bankRepository.save(bank);
     }
+
 }

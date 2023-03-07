@@ -2,12 +2,19 @@ package com.example.mockitospringboot.models;
 
 import com.example.mockitospringboot.exceptions.InsufficientMoneyException;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Entity
+@Table(name = "accounts")
 public class Account {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
     private String person;
     private BigDecimal balance;
 

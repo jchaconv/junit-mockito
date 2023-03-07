@@ -52,13 +52,13 @@ class MockitoSpringBootApplicationTest {
 
         verify(accountRepository, times(3)).findById(1L);
         verify(accountRepository, times(3)).findById(2L);
-        verify(accountRepository, times(2)).update(any(Account.class));
+        verify(accountRepository, times(2)).save(any(Account.class));
 
         int total = accountService.reviewTotalTransfers(1L);
         assertEquals(1, total);
 
         verify(bankRepository, times(2)).findById(1L);
-        verify(bankRepository).update(any(Bank.class));
+        verify(bankRepository).save(any(Bank.class));
 
         verify(accountRepository, times(6)).findById(anyLong());
         verify(accountRepository, never()).findAll();
@@ -91,10 +91,10 @@ class MockitoSpringBootApplicationTest {
 
         verify(accountRepository, times(3)).findById(1L);
         verify(accountRepository, times(2)).findById(2L);
-        verify(accountRepository, never()).update(any(Account.class));
+        verify(accountRepository, never()).save(any(Account.class));
 
         verify(bankRepository, times(1)).findById(1L);
-        verify(bankRepository, never()).update(any(Bank.class));
+        verify(bankRepository, never()).save(any(Bank.class));
 
     }
 
@@ -114,5 +114,6 @@ class MockitoSpringBootApplicationTest {
         verify(accountRepository, times(2)).findById(1L);
 
     }
+
 }
 

@@ -624,29 +624,45 @@ Se agregó en properties para ver logs de hibernate:
 
 logging.level.org.hibernate.SQL=debug
 
+Se modificó Bank y Account con @Entity y @Table, etc
 
-<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
+Se creó test/resources/import.sql
 
 *******************************
 
+69. Modificando nuestros repositorios con Spring Data JPA
 
+Se cambia AccountRepository y BankRepository extendiendo de JpaRepository
+y comentando los métodos, ya no es necesario declararlos.
+
+AccountServiceImpl: Se agregó orElseThrow a cada findById y en 
+lugar de update -> save para fixear errores.
+
+MockitoSpringBootApplicationTest: update -> save
+
+Data: Se retorna Optional con of()
 
 *******************************
 
+70. Modificando nuestros repositorios con Spring Data JPA parte 2
 
+Se agregó un @Query en AccountRepository
+
+?1 es como un caracter que se reemplazará con el parámetro en el método
+Si hubiera un segundo parámetro se podría usar ?2 y así sucesivamente.
 
 *******************************
 
+71. Escribiendo pruebas de integración con @DataJpaTest
+73. Escribiendo pruebas para el update y el delete
 
+Se creó JpaTestIntegration y se declaró con @DataJpaTest
+
+Estos test hacen rollback para no afectar a otros test
+
+Se agregan .00 cuando se compara con los valores del import.sql
+
+También maneja datos en caché para no volver a realizar consultas
 
 *******************************
 
