@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.example.mockitospringboot.Data.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -115,5 +117,40 @@ class MockitoSpringBootApplicationTest {
 
     }
 
+    @Test
+    void testFindAll() {
+        //GIVEN
+        List<Account> data = Arrays.asList(createAccount001().orElseThrow(), createAccount002().orElseThrow());
+        when(accountRepository.findAll()).thenReturn(data);
+
+        //WHEN
+        List<Account> accounts = accountService.findAll();
+
+        //THEN
+        assertFalse(accounts.isEmpty());
+        assertEquals(2, accounts.size());
+        assertTrue(accounts.contains(createAccount002().orElseThrow()));
+
+        verify(accountRepository).findAll();
+    }
+
+    @Test
+    void testSave() {
+        Account accountRuti = new Account(null, "Ruti", new BigDecimal("3800"));
+        when(accountRepository.save(any())).then(invocation -> {
+            Account acc = invocation.getArgument(0);
+            acc.setId(3L);
+            return acc;
+        });
+
+        Account account = accountService.save(accountRuti);
+
+        assertEquals("Ruti", account.getPerson());
+        assertEquals(3, account.getId());
+        assertEquals("3800", account.getBalance().toPlainString());
+
+        verify(accountRepository).save(any());
+
+    }
 }
 

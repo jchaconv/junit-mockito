@@ -664,11 +664,69 @@ Se agregan .00 cuando se compara con los valores del import.sql
 
 También maneja datos en caché para no volver a realizar consultas
 
+
+****************************************************
+SECCIÓN 5 : Test de Controllers MockMvc - WebMvcTest
+****************************************************
+
+Se creó AccountController con algunos métodos
+
+Se agrega @Transactional de org.spring en los métodos de AccountServiceImpl
+Para las consultas se le agrega readOnly=true
+
+Se comenta el scope test de h2 en el pom
+
 *******************************
 
+77. Configurando Swagger
+78. Probando los endpoints con Swagger UI
 
+Se agregó la sgte dependencia para usar swagger:
+
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-boot-starter</artifactId>
+    <version>3.0.0</version>
+</dependency>
+
+Y se creó la clase SpringFoxConfig. ant() sirve para dar más detalles de los endpoints, si
+se requieren todas las apis poner any()
+
+Se agregó en el properties de main: logging.level.org.hibernate.SQL=debug
+
+Copiar y pegar el import.sql en resources de main
+
+Reiniciar el ide por si no reconoce los cambios y Ejecutar la aplicación
+
+Para ver info de la aplicación en formato json:
+localhost:8080/v2/api-docs
+
+Para ver en html y hacer pruebas de los endpoints: 
+localhost:8080/swagger-ui/
 
 *******************************
+
+79. Escribiendo pruebas unitarias para el controlador con @WebMvcTest y MockMvc
+
+
+Se creó AccountControllerTest y se usaron las anotaciones:
+
+@WebMvcTest(AccountController.class)
+
+@Autowired
+private MockMvc mvc;
+
+@MockBean
+private AccountService accountService;
+
+Se hicieron test para get y post
+
+.andExpect(content()...) para comparar json
+
+Click derecho en el proyecto -> Run all test with coverage
+
+Para solo ver la cobertura de nuestras clases en el package principal:
+En la opción de run -> Edit Configurations -> modify code coverage -> specify classes and packages
 
 
 
