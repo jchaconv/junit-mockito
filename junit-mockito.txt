@@ -582,9 +582,9 @@ verifyNoInteractions
 
 
 
-********************
-SECCIÓN 3 : Mockito
-********************
+*****************************************
+SECCIÓN 4 : Test de Servicios con Mockito
+*****************************************
 
 Se crea el proyecto mockito-springboot con la dependencia Spring Web
 Para evitar conflictos se utilizó la versión 2.7.9 de spring boot porque
@@ -615,7 +615,7 @@ Todo esto ayuda a reducir mucho los logs en test.
 
 
 *********************************
-SECCIÓN 4 : Test de Repositorios
+SECCIÓN 5 : Test de Repositorios
 *********************************
 
 Se agregaron las dependencias de jpa y h2 al proyecto mockito-springboot
@@ -666,7 +666,7 @@ También maneja datos en caché para no volver a realizar consultas
 
 
 ****************************************************
-SECCIÓN 5 : Test de Controllers MockMvc - WebMvcTest
+SECCIÓN 6 : Test de Controllers MockMvc - WebMvcTest
 ****************************************************
 
 Se creó AccountController con algunos métodos
@@ -729,12 +729,70 @@ Para solo ver la cobertura de nuestras clases en el package principal:
 En la opción de run -> Edit Configurations -> modify code coverage -> specify classes and packages
 
 
-
-*******************************
-
+Se crean más métodos en el service para expandir el controller.
 
 
-*******************************
+********************************************************************
+SECCIÓN 7 : Test de Integración de servicios Rest con WebTestClient
+********************************************************************
+
+Para hacer pruebas reales con las peticiones http.
+Se agrega esta dependencia de webflux para las pruebas:
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-webflux</artifactId>
+    <scope>test</scope>
+</dependency>
+
+Se creó el AccountControllerWebTestClient. Levantar la aplicación y ejecutar los test.
+
+Se añadió @SpringBootTest(webEnvironment = RANDOM_PORT) al comienzo para que los test se ejecuten 
+en un puerto aleatorio.
+
+Se puede omitir el puerto del post() porque es entorno local y pueden corren ambos procesos a la vez en el mismo puerto.
+
+Luego de expectBody() viene toda la respuesta.
+Todo lo que está en consumeWith() es para hacer una navegación en el json, una alternativa a lo que evalúa el jsonPath().
+
+
+Se usó @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+al inicio de la clase para establecer el orden de los test de integración
+Y @Order(1) en cada test modificando el número para establecer el orden
+
+Se modificaron los saldos porque el test de transferencia afectaba los otros test de consulta. Es así como se hacen las pruebas de integración.
+
+listTest y listTest2 son dos formas distintas de validar listas
+
+Se crearon métodos test para guardar y se implementó el delete en el service, controller y el test correspondiente.
+Con el is5xxServerError se valida el orElseThrow del serviceImpl
+Se hizo un cambio en el findById del Controller para que el test pudiera pasar bien al validar que no existía el valor esperado
+con un NotFound.
+
+
+**********************************************************************
+SECCIÓN 8 : Test de Integración de servicios Rest con TestRestTemplate
+**********************************************************************
+
+Se creó la clase AccountControllerTestRestTemplateTest. Se tienen 3 formas de crear la uri en los métodos del nuevo client
+TestRestTemplate.
+
+Se hizo navegación entre atributos del json y se comparó con otro json en testTransfer.
+
+Si ejecutamos con "Run all tests" fallan las pruebas de integración porque al compartir el mismo server los datos son modificados por las 
+otras pruebas. Para evitar esto podemos agregar @Tag y edit configurations->by tags-> !rt_integration
+y así pasan las pruebas correctamente, la idea es deshabilitar toda una clase para hacer las pruebas de integracion y así no tener conflicto
+
+Para hacerlo mediante consola:
+./mvnw test
+
+Si sale error de encoding en algún archivo:
+File -> file properties -> file encoding -> iso8859
+Y si falla en intellij, hacer el mismo proceso pero setear en utf-8
+
+
+Si falla por hacer conflicto con otros test de integración:
+./mvnw test -Dgroups="!rt_integration"
 
 
 
