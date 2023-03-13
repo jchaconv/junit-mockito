@@ -34,6 +34,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
+    public void deleteById(Long id) {
+        accountRepository.deleteById(id);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Account findById(Long id) {
         //return accountRepository.findById(id);

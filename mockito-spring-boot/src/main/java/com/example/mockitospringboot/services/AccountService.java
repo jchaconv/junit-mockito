@@ -11,6 +11,8 @@ public interface AccountService {
 
     Account save(Account account);
 
+    void deleteById(Long id);
+
     Account findById(Long id);
 
     int reviewTotalTransfers(Long idBank);
