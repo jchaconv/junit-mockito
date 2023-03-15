@@ -37,6 +37,7 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public Exam findExamByNameWithQuestions(String name) {
+        System.out.println("ExamServiceImpl.findExamByNameWithQuestions");
         Optional<Exam> optionalExam = findOptionalExamByName(name);
         Exam exam = null;
         if(optionalExam.isPresent()) {
